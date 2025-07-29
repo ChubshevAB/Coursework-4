@@ -1,0 +1,36 @@
+# Файлы окружения
+.env
+.env.local
+*.env
+
+# Файлы Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+# Базы данных и журналы
+*.sqlite3
+*.log
+logs/
+
+# Статические файлы (если используются CDN)
+/staticfiles/
+/media/
+
+# IDE и системные файлы
+.idea/
+.vscode/
+.DS_Store
+*.swp
+
+# Директории зависимостей
+venv/
+env/
+*.venv
+pip-wheel-metadata/
+
+# Дистрибутивы и сборки
+/dist/
+/build/
+*.egg-info/

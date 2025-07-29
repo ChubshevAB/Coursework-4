@@ -1,0 +1,31 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Удаление рассылки #{{ object.id }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">Подтверждение удаления</h3>
+        </div>
+        <div class="card-body">
+            <h5>Вы уверены, что хотите удалить рассылку #{{ object.id }}?</h5>
+            <p><strong>Дата начала:</strong> {{ object.first_datetime|date:"d.m.Y H:i" }}</p>
+            <p><strong>Сообщение:</strong> {{ object.message.title }}</p>
+            <p><strong>Получателей:</strong> {{ object.recipients.count }}</p>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'mailing-detail' object.pk %}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Отмена
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Удалить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Удаление получателя - {{ recipient.full_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">Подтверждение удаления</h3>
+        </div>
+        <div class="card-body">
+            <p>Вы уверены, что хотите удалить получателя <strong>{{ recipient.full_name }}</strong> ({{ recipient.email }})?</p>
+            <p class="text-muted">Это действие нельзя будет отменить.</p>
+        </div>
+        <div class="card-footer">
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'recipient-detail' recipient.pk %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Отмена
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-2"></i>Удалить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

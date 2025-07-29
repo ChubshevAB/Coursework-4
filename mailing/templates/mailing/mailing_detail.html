@@ -1,0 +1,74 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Детали рассылки #{{ mailing.id }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Детали рассылки #{{ mailing.id }}</h3>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <h5>Основная информация</h5>
+                    <p><strong>Статус:</strong> 
+                        <span class="badge 
+                            {% if mailing.status == 'completed' %}bg-success
+                            {% elif mailing.status == 'started' %}bg-warning text-dark
+                            {% else %}bg-secondary{% endif %}">
+                            {{ mailing.get_status_display }}
+                        </span>
+                    </p>
+                    <p><strong>Дата начала:</strong> {{ mailing.first_datetime|date:"d.m.Y H:i" }}</p>
+                    <p><strong>Дата окончания:</strong> {{ mailing.end_datetime|date:"d.m.Y H:i" }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Сообщение</h5>
+                    <p><strong>Тема:</strong> {{ mailing.message.title }}</p>
+                    <p><strong>Содержание:</strong></p>
+                    <div class="border p-2 bg-light">{{ mailing.message.letter }}</div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h5>Получатели ({{ mailing.recipients.count }})</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Ф.И.О.</th>
+                                <th>Email</th>
+                                <th>Комментарий</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for recipient in mailing.recipients.all %}
+                            <tr>
+                                <td>{{ recipient.full_name }}</td>
+                                <td>{{ recipient.email }}</td>
+                                <td>{{ recipient.comment|default:"-" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'mailing-list' %}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Назад к списку
+                </a>
+                <div>
+                    <a href="{% url 'mailing-update' mailing.pk %}" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> Редактировать
+                    </a>
+                    <a href="{% url 'attempt-list' %}?mailing_id={{ mailing.id }}" class="btn btn-info">
+                        <i class="bi bi-clock-history"></i> История попыток
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

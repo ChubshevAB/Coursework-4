@@ -1,0 +1,126 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}
+    {% if object %}Редактирование рассылки #{{ object.id }}{% else %}Создание новой рассылки{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+                {% if object %}Редактирование рассылки #{{ object.id }}{% else %}Создание новой рассылки{% endif %}
+            </h3>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.first_datetime.id_for_label }}" class="form-label">
+                                {{ form.first_datetime.label }}
+                            </label>
+                            <input type="datetime-local" class="form-control" 
+                                   id="{{ form.first_datetime.id_for_label }}"
+                                   name="{{ form.first_datetime.name }}"
+                                   value="{{ form.first_datetime.value|date:'Y-m-d\TH:i' }}">
+                            {% if form.first_datetime.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.first_datetime.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.end_datetime.id_for_label }}" class="form-label">
+                                {{ form.end_datetime.label }}
+                            </label>
+                            <input type="datetime-local" class="form-control" 
+                                   id="{{ form.end_datetime.id_for_label }}"
+                                   name="{{ form.end_datetime.name }}"
+                                   value="{{ form.end_datetime.value|date:'Y-m-d\TH:i' }}">
+                            {% if form.end_datetime.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.end_datetime.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.status.id_for_label }}" class="form-label">
+                        {{ form.status.label }}
+                    </label>
+                    <select class="form-select" id="{{ form.status.id_for_label }}" name="{{ form.status.name }}">
+                        {% for value, label in form.fields.status.choices %}
+                        <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.status.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.status.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.message.id_for_label }}" class="form-label">
+                        {{ form.message.label }}
+                    </label>
+                    <select class="form-select" id="{{ form.message.id_for_label }}" name="{{ form.message.name }}">
+                        {% for message in form.fields.message.queryset %}
+                        <option value="{{ message.id }}" {% if form.message.value == message.id %}selected{% endif %}>
+                            {{ message.title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.message.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.message.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">{{ form.recipients.label }}</label>
+                    <div class="border p-3" style="max-height: 200px; overflow-y: auto;">
+                        {% for recipient in form.fields.recipients.queryset %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" 
+                                   id="recipient_{{ recipient.id }}" 
+                                   name="{{ form.recipients.name }}" 
+                                   value="{{ recipient.id }}"
+                                   {% if recipient.id in form.recipients.value or recipient in object.recipients.all %}checked{% endif %}>
+                            <label class="form-check-label" for="recipient_{{ recipient.id }}">
+                                {{ recipient.full_name }} ({{ recipient.email }})
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if form.recipients.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.recipients.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{% if object %}{% url 'mailing-detail' object.pk %}{% else %}{% url 'mailing-list' %}{% endif %}" 
+                       class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Отмена
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Сохранить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
