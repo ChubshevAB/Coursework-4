@@ -4,6 +4,7 @@ from django.urls import reverse
 
 User = get_user_model()  # Получаем модель пользователя
 
+
 class Recipient(models.Model):
     email = models.EmailField(
         max_length=100,
@@ -23,10 +24,10 @@ class Recipient(models.Model):
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='recipients',
+        related_name="recipients",
         verbose_name="Владелец",
         null=True,
-        blank=True
+        blank=True,
     )
 
     class Meta:
@@ -52,10 +53,10 @@ class Message(models.Model):
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='messages',
+        related_name="messages",
         verbose_name="Владелец",
         null=True,
-        blank=True
+        blank=True,
     )
 
     class Meta:
@@ -94,10 +95,10 @@ class Mailing(models.Model):
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='mailings',
+        related_name="mailings",
         verbose_name="Владелец",
         null=True,
-        blank=True
+        blank=True,
     )
 
     class Meta:
@@ -116,44 +117,39 @@ class Mailing(models.Model):
 
 class MailingAttempt(models.Model):
     STATUS_CHOICES = [
-        ('success', 'Успешно'),
-        ('failed', 'Не успешно'),
+        ("success", "Успешно"),
+        ("failed", "Не успешно"),
     ]
 
     attempt_datetime = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="Дата и время попытки"
+        auto_now_add=True, verbose_name="Дата и время попытки"
     )
     status = models.CharField(
-        max_length=7,
-        choices=STATUS_CHOICES,
-        verbose_name="Статус попытки"
+        max_length=7, choices=STATUS_CHOICES, verbose_name="Статус попытки"
     )
     server_response = models.TextField(
-        verbose_name="Ответ почтового сервера",
-        blank=True,
-        null=True
+        verbose_name="Ответ почтового сервера", blank=True, null=True
     )
     mailing = models.ForeignKey(
         Mailing,
         on_delete=models.CASCADE,
         related_name="attempts",
-        verbose_name="Рассылка"
+        verbose_name="Рассылка",
     )
     recipient = models.ForeignKey(
         Recipient,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        verbose_name="Получатель"
+        verbose_name="Получатель",
     )
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='attempts',
+        related_name="attempts",
         verbose_name="Владелец",
         null=True,
-        blank=True
+        blank=True,
     )
 
     class Meta:
